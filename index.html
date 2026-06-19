@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Feliz Cumpleaños Chaparra 🌹</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:#0d0015;font-family:'Nunito',sans-serif;color:#fff;touch-action:pan-y}
+canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0;transition:opacity .5s}
+
+.screen{
+  position:fixed;inset:0;z-index:1;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:24px 22px 100px;
+  text-align:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .45s ease, transform .45s ease;
+  transform:translateX(80px);
+}
+.screen.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.screen.gone{opacity:0;transform:translateX(-80px);pointer-events:none}
+
+.nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px 28px;
+  background:linear-gradient(to top,#0d0015f0 60%,transparent);
+}
+.nbtn{
+  background:rgba(255,107,157,0.15);
+  border:1.5px solid rgba(255,107,157,0.4);
+  color:#ff6b9d;border-radius:50px;
+  padding:12px 20px;font-family:'Nunito',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;min-width:90px;
+  transition:background .15s,transform .1s;
+}
+.nbtn:active{background:rgba(255,107,157,0.35);transform:scale(.95)}
+.nbtn.main{background:linear-gradient(135deg,#ff6b9d,#c71470);color:#fff;border-color:transparent;box-shadow:0 4px 18px #ff6b9d55}
+.nbtn.hide{opacity:0;pointer-events:none}
+.dots{display:flex;gap:6px;align-items:center}
+.d{width:7px;height:7px;border-radius:50%;background:rgba(255,107,157,0.28);transition:all .3s}
+.d.on{background:#ff6b9d;transform:scale(1.35)}
+
+.ds{font-family:'Dancing Script',cursive}
+.pk{color:#ff6b9d}
+.lbl{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#ffaecb;margin-bottom:12px}
+
+/* PANTALLA 1 - HERO */
+.ring{
+  width:170px;height:170px;border-radius:50%;
+  background:radial-gradient(circle,#ff6b9d2a,transparent 70%);
+  border:2px solid #ff6b9d3a;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 18px;position:relative;
+  animation:breath 3s ease-in-out infinite;
+}
+.ring::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px dashed #ff6b9d28;animation:spin 14s linear infinite}
+@keyframes breath{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.n21{font-family:'Dancing Script',cursive;font-size:88px;font-weight:700;color:#ff6b9d;line-height:1;text-shadow:0 0 40px #ff6b9d88}
+
+/* CARDS */
+.card{
+  background:rgba(255,107,157,0.07);
+  border:1px solid rgba(255,107,157,0.22);
+  border-radius:22px;padding:20px 18px;
+  width:100%;max-width:360px;text-align:left;
+  position:relative;margin-bottom:12px;
+}
+.card:last-child{margin-bottom:0}
+.ci{font-size:28px;margin-bottom:8px}
+.card h3{font-size:15px;font-weight:700;color:#ff6b9d;margin-bottom:6px}
+.card p{font-size:13.5px;line-height:1.8;color:#ffd6e8}
+.qq{position:absolute;top:-6px;left:12px;font-family:'Dancing Script',cursive;font-size:65px;color:#ff6b9d1a;line-height:1}
+
+/* MAPA */
+.cits{display:flex;align-items:center;width:100%;max-width:320px;margin:16px auto 16px}
+.cit{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto}
+.cblob{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
+.cblob.col{background:rgba(79,195,247,.12);border:1.5px solid #4fc3f788}
+.cblob.ver{background:rgba(255,107,157,.12);border:1.5px solid #ff6b9d88}
+.cnm{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#fff}
+.cyo{font-size:10px;color:#ffaecb}
+.tline{flex:1;height:2px;background:linear-gradient(90deg,#4fc3f7,#ff6b9d);border-radius:2px;position:relative;margin:0 8px;margin-bottom:24px}
+.plane{position:absolute;top:50%;left:0;transform:translateY(-50%);font-size:16px;animation:glide 3s ease-in-out infinite}
+@keyframes glide{0%{left:0}50%{left:calc(100% - 18px)}100%{left:0}}
+
+/* PLAYER */
+.plcard{background:rgba(255,107,157,0.08);border:1px solid rgba(255,107,157,0.25);border-radius:20px;padding:18px 16px;width:100%;max-width:340px}
+.ptop{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.alb{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#ff6b9d,#c71470);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.tnm{font-size:13px;font-weight:700;color:#fff}
+.tat{font-size:11px;color:#ffaecb;margin-top:2px}
+.pb2{width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:2px;cursor:pointer;margin-bottom:4px}
+.pf{height:100%;width:0%;background:linear-gradient(90deg,#ff6b9d,#c71470);border-radius:2px;transition:width .8s linear}
+.trow{display:flex;justify-content:space-between;font-size:10px;color:#ffaecb55;margin-bottom:12px}
+.pctrls{display:flex;align-items:center;justify-content:center;gap:14px}
+.pp{background:linear-gradient(135deg,#ff6b9d,#c71470);border:none;color:#fff;width:46px;height:46px;border-radius:50%;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s}
+.pp:active{transform:scale(.92)}
+.sc{background:none;border:none;color:#ffaecb;font-size:16px;cursor:pointer;padding:8px}
+.ytn{font-size:11px;color:#ffaecb44;margin-top:10px;text-align:center}
+.ytn a{color:#ff6b9d;font-weight:700;text-decoration:none}
+
+/* FINAL */
+.bh{font-size:62px;animation:ph 1.4s ease-in-out infinite;display:block;margin:10px 0}
+@keyframes ph{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.fwbtn{background:linear-gradient(135deg,#ff6b9d,#c71470);border:none;color:#fff;border-radius:50px;padding:13px 30px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px #ff6b9d55;transition:transform .1s;margin-top:14px}
+.fwbtn:active{transform:scale(.95)}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<canvas id="fw"></canvas>
+
+<!-- PANTALLA 0: PORTADA -->
+<div id="s0" class="screen active">
+  <div class="lbl">19 de junio · 2025</div>
+  <div class="ring"><div class="n21">21</div></div>
+  <div class="ds" style="font-size:28px;margin-bottom:8px">Feliz cumpleaños,<br><span class="pk">chaparra 🌹</span></div>
+  <p style="font-size:13px;color:#ffaecb;line-height:1.8;max-width:270px;margin-top:10px">Para la niña más bonita de Veracruz.<br>Toca <b style="color:#ff6b9d">Siguiente</b> y descubre algo especial.</p>
+</div>
+
+<!-- PANTALLA 1: CARTA PARTE 1 -->
+<div id="s1" class="screen">
+  <div class="lbl">Una carta para ti</div>
+  <div class="ds pk" style="font-size:24px;margin-bottom:16px">Llegaste cuando<br>menos lo esperaba</div>
+  <div class="card">
+    <div class="qq">"</div>
+    <p>Hoy cumples 21 años y no sabes cuánto me gustaría estar contigo para abrazarte y celebrar a tu lado.</p>
+  </div>
+  <div class="card">
+    <p>Mientras llega ese momento, quiero que recuerdes que hay alguien en Colima que piensa en ti todos los días y que sueña con el día en que la distancia sea solo una anécdota.</p>
+  </div>
+</div>
+
+<!-- PANTALLA 2: RAZONES 1 -->
+<div id="s2" class="screen">
+  <div class="lbl">Por qué te amo</div>
+  <div class="ds pk" style="font-size:24px;margin-bottom:16px">Razones que me<br>sobran 💖</div>
+  <div class="card">
+    <div class="ci">📞</div>
+    <p>Porque con una llamada tuya haces que mi día mejore al instante, sin importar cómo estuviera.</p>
+  </div>
+  <div class="card">
+    <div class="ci">😊</div>
+    <p>Porque incluso a la distancia logras sacarme una sonrisa que nadie más puede.</p>
+  </div>
+</div>
+
+<!-- PANTALLA 3: RAZONES 2 -->
+<div id="s3" class="screen">
+  <div class="lbl">Por qué te amo</div>
+  <div class="ds pk" style="font-size:24px;margin-bottom:16px">Y podría seguir<br>para siempre ✨</div>
+  <div class="card">
+    <div class="ci">🍀</div>
+    <p>Porque me haces sentir el hombre más afortunado del mundo solo por tenerte.</p>
+  </div>
+  <div class="card">
+    <div class="ci">🌹</div>
+    <p>Y porque, simplemente, eres tú. No necesito más razones.</p>
+  </div>
+</div>
+
+<!-- PANTALLA 4: DISTANCIA -->
+<div id="s4" class="screen">
+  <div class="lbl">A pesar de todo</div>
+  <div class="ds pk" style="font-size:24px;margin-bottom:14px">La distancia no<br>puede con esto</div>
+  <div class="cits">
+    <div class="cit">
+      <div class="cblob col">💙</div>
+      <div class="cnm">COLIMA</div>
+      <div class="cyo">Yo</div>
+    </div>
+    <div class="tline"><div class="plane">✈️</div></div>
+    <div class="cit">
+      <div class="cblob ver">💗</div>
+      <div class="cnm">VERACRUZ</div>
+      <div class="cyo">Tú</div>
+    </div>
+  </div>
+  <div class="card" style="text-align:center">
+    <p>Sonríe cuando recibe un mensaje tuyo.<br>Sueña contigo cada noche.<br><br><b style="color:#ff6b9d">El amor no necesita estar cerca<br>para ser real.</b></p>
+  </div>
+</div>
+
+<!-- PANTALLA 5: MÚSICA -->
+<div id="s5" class="screen">
+  <div class="lbl">🎵 Tu canción</div>
+  <div class="ds pk" style="font-size:24px;margin-bottom:14px">Esta es para ti,<br>chaparra</div>
+  <div class="plcard">
+    <div class="ptop">
+      <div class="alb">🎶</div>
+      <div>
+        <div class="tnm">Tu canción especial</div>
+        <div class="tat">Solo para ti · 19 jun 2025</div>
+      </div>
+    </div>
+    <div class="pb2" onclick="seek(event,this)"><div class="pf" id="pf"></div></div>
+    <div class="trow"><span id="ct">0:00</span><span id="dt">3:00</span></div>
+    <div class="pctrls">
+      <button class="sc" onclick="rst()">⏮</button>
+      <button class="pp" id="pbtn" onclick="tp()">▶</button>
+      <button class="sc" id="mb" onclick="tm()">🔊</button>
+    </div>
+    <div class="ytn">🎵 Escucha en: <a href="https://www.youtube.com/watch?v=MldGX_mbS-o" target="_blank">YouTube ↗</a></div>
+  </div>
+</div>
+
+<!-- PANTALLA 6: FINAL -->
+<div id="s6" class="screen">
+  <div class="lbl">Con todo mi amor</div>
+  <div class="ds" style="font-size:26px;margin-bottom:6px">Gracias por existir,<br><span class="pk">mi chaparra 🌸</span></div>
+  <span class="bh">❤️</span>
+  <div class="card" style="text-align:center;max-width:340px">
+    <p>Gracias por compartir tu vida conmigo y por hacerme tan feliz.<br><br>Espero que este año esté lleno de sueños cumplidos y de momentos que vivamos juntos.<br><br><b style="color:#ff6b9d">Te amo muchísimo. ❤️</b></p>
+  </div>
+  <button class="fwbtn" onclick="launchFW()">🎆 ¡Lanzar fuegos artificiales!</button>
+</div>
+
+<!-- NAVEGACIÓN -->
+<div class="nav">
+  <button class="nbtn" id="bprev" onclick="go(-1)">← Atrás</button>
+  <div class="dots" id="dots"></div>
+  <button class="nbtn main" id="bnext" onclick="go(1)">Siguiente →</button>
+</div>
+
+<script>
+const TOTAL = 7;
+let cur = 0;
+
+// Dots
+const dotsEl = document.getElementById('dots');
+for(let i = 0; i < TOTAL; i++){
+  const d = document.createElement('div');
+  d.className = 'd' + (i===0?' on':'');
+  dotsEl.appendChild(d);
+}
+
+function go(dir){
+  const nxt = cur + dir;
+  if(nxt < 0 || nxt >= TOTAL) return;
+  document.getElementById('s'+cur).className = 'screen gone';
+  cur = nxt;
+  for(let i = 0; i < TOTAL; i++){
+    const el = document.getElementById('s'+i);
+    if(i === cur){ el.className = 'screen active'; }
+    else if(i < cur){ el.className = 'screen gone'; }
+    else { el.className = 'screen'; }
+  }
+  document.querySelectorAll('.d').forEach((d,i) => d.className = 'd'+(i===cur?' on':''));
+  const prev = document.getElementById('bprev');
+  const next = document.getElementById('bnext');
+  prev.className = 'nbtn' + (cur===0?' hide':'');
+  if(cur === TOTAL-1){
+    next.className = 'nbtn main hide';
+  } else {
+    next.textContent = 'Siguiente →';
+    next.className = 'nbtn main';
+  }
+}
+
+document.getElementById('bprev').className = 'nbtn hide';
+
+// Partículas de fondo
+const bgC = document.getElementById('bg');
+const bgX = bgC.getContext('2d');
+let bW, bH, pts = [];
+function rsB(){ bW = bgC.width = window.innerWidth; bH = bgC.height = window.innerHeight; }
+rsB(); window.addEventListener('resize', rsB);
+for(let i = 0; i < 65; i++){
+  pts.push({ x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight,
+    r: Math.random()*1.8+.4, dx: (Math.random()-.5)*.25, dy: -Math.random()*.35-.1,
+    a: Math.random()*.5+.15, c: Math.random()>.5?'#ff6b9d':'#c7d2fe' });
+}
+function aBg(){
+  bgX.clearRect(0,0,bW,bH);
+  pts.forEach(p=>{
+    bgX.beginPath(); bgX.arc(p.x,p.y,p.r,0,Math.PI*2);
+    bgX.fillStyle=p.c; bgX.globalAlpha=p.a; bgX.fill();
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.y<-5||p.x<-5||p.x>bW+5){ p.x=Math.random()*bW; p.y=bH+5; p.dy=-Math.random()*.35-.1; }
+  });
+  bgX.globalAlpha=1; requestAnimationFrame(aBg);
+}
+aBg();
+
+// Fuegos artificiales
+const fwC = document.getElementById('fw');
+const fwX = fwC.getContext('2d');
+let fwP = [], fwOn = false;
+function rsF(){ fwC.width=window.innerWidth; fwC.height=window.innerHeight; }
+rsF(); window.addEventListener('resize', rsF);
+
+function burst(){
+  const x=Math.random()*fwC.width, y=Math.random()*fwC.height*.5+60;
+  const cols=['#ff6b9d','#ffd6e8','#c7d2fe','#fff','#ffaecb','#ff9de2','#ffc0cb'];
+  const c=cols[~~(Math.random()*cols.length)];
+  for(let i=0;i<50;i++){
+    const a=Math.random()*Math.PI*2, s=Math.random()*7+2;
+    fwP.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,a:1,c,sz:Math.random()*3+1});
+  }
+}
+function launchFW(){
+  fwC.style.opacity='1'; fwOn=true;
+  for(let i=0;i<12;i++) setTimeout(burst, i*250);
+  setTimeout(()=>{ fwOn=false; setTimeout(()=>fwC.style.opacity='0',1500); }, 3500);
+  aFw();
+}
+function aFw(){
+  fwX.clearRect(0,0,fwC.width,fwC.height);
+  fwP=fwP.filter(p=>p.a>.02);
+  fwP.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vy+=.09; p.a-=.013; p.vx*=.97;
+    fwX.beginPath(); fwX.arc(p.x,p.y,p.sz,0,Math.PI*2);
+    fwX.fillStyle=p.c; fwX.globalAlpha=p.a; fwX.fill();
+  });
+  fwX.globalAlpha=1;
+  if(fwOn||fwP.length>0) requestAnimationFrame(aFw);
+}
+
+// Reproductor simulado
+let aCtx=null, playing=false, muted=false, elapsed=0, dur=180, itv=null;
+function fmt(s){ s=Math.max(0,~~s); return ~~(s/60)+':'+(s%60<10?'0':'')+s%60; }
+function tp(){
+  if(!aCtx) aCtx=new(window.AudioContext||window.webkitAudioContext)();
+  playing=!playing;
+  document.getElementById('pbtn').textContent=playing?'⏸':'▶';
+  if(playing){ itv=setInterval(()=>{ elapsed=Math.min(elapsed+1,dur); document.getElementById('pf').style.width=(elapsed/dur*100)+'%'; document.getElementById('ct').textContent=fmt(elapsed); if(elapsed>=dur){clearInterval(itv);playing=false;document.getElementById('pbtn').textContent='▶';} },1000); }
+  else clearInterval(itv);
+}
+function rst(){ elapsed=0; clearInterval(itv); if(playing){playing=false;document.getElementById('pbtn').textContent='▶';} document.getElementById('pf').style.width='0%'; document.getElementById('ct').textContent='0:00'; }
+function tm(){ muted=!muted; document.getElementById('mb').textContent=muted?'🔇':'🔊'; }
+function seek(e,b){ const r=b.getBoundingClientRect(); elapsed=~~((e.clientX-r.left)/r.width*dur); document.getElementById('pf').style.width=(elapsed/dur*100)+'%'; document.getElementById('ct').textContent=fmt(elapsed); }
+</script>
+</body>
+</html>
