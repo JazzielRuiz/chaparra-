@@ -7,16 +7,49 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:#0d0015;font-family:'Nunito',sans-serif;color:#fff;touch-action:pan-y}
+html,body{height:100%;overflow:hidden;background:#0d0015;font-family:'Nunito',sans-serif;color:#fff;}
 canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0;transition:opacity .5s}
 
+/* ====== CUENTA REGRESIVA ====== */
+#countdown-screen{
+  position:fixed;inset:0;z-index:20;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:28px 24px;text-align:center;
+  background:#0d0015;
+}
+.lock-icon{font-size:52px;margin-bottom:16px;animation:lockpulse 2s ease-in-out infinite}
+@keyframes lockpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.cd-title{font-family:'Dancing Script',cursive;font-size:28px;color:#ff6b9d;margin-bottom:8px}
+.cd-sub{font-size:13px;color:#ffaecb;margin-bottom:32px;line-height:1.7}
+.cd-boxes{display:flex;gap:12px;justify-content:center;margin-bottom:28px}
+.cd-box{
+  background:rgba(255,107,157,0.1);
+  border:1.5px solid rgba(255,107,157,0.35);
+  border-radius:16px;padding:14px 10px;
+  min-width:68px;
+}
+.cd-num{font-family:'Dancing Script',cursive;font-size:44px;font-weight:700;color:#ff6b9d;line-height:1;text-shadow:0 0 20px #ff6b9d66}
+.cd-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#ffaecb;margin-top:4px}
+.cd-msg{font-size:13px;color:#ffd6e8;line-height:1.8;max-width:280px}
+
+/* ====== UNLOCK ANIMATION ====== */
+#unlock-anim{
+  position:fixed;inset:0;z-index:19;
+  display:none;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:#0d0015;text-align:center;
+}
+#unlock-anim .ul-emoji{font-size:70px;animation:spin 1s linear infinite}
+#unlock-anim p{font-family:'Dancing Script',cursive;font-size:28px;color:#ff6b9d;margin-top:20px}
+
+/* ====== PANTALLAS PRINCIPALES ====== */
 .screen{
   position:fixed;inset:0;z-index:1;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:24px 22px 100px;
-  text-align:center;
+  padding:24px 22px 100px;text-align:center;
   opacity:0;pointer-events:none;
   transition:opacity .45s ease, transform .45s ease;
   transform:translateX(80px);
@@ -31,12 +64,10 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
   background:linear-gradient(to top,#0d0015f0 60%,transparent);
 }
 .nbtn{
-  background:rgba(255,107,157,0.15);
-  border:1.5px solid rgba(255,107,157,0.4);
-  color:#ff6b9d;border-radius:50px;
-  padding:12px 20px;font-family:'Nunito',sans-serif;
-  font-size:14px;font-weight:700;cursor:pointer;min-width:90px;
-  transition:background .15s,transform .1s;
+  background:rgba(255,107,157,0.15);border:1.5px solid rgba(255,107,157,0.4);
+  color:#ff6b9d;border-radius:50px;padding:12px 20px;
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;min-width:90px;transition:background .15s,transform .1s;
 }
 .nbtn:active{background:rgba(255,107,157,0.35);transform:scale(.95)}
 .nbtn.main{background:linear-gradient(135deg,#ff6b9d,#c71470);color:#fff;border-color:transparent;box-shadow:0 4px 18px #ff6b9d55}
@@ -49,35 +80,18 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
 .pk{color:#ff6b9d}
 .lbl{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#ffaecb;margin-bottom:12px}
 
-/* PANTALLA 1 - HERO */
-.ring{
-  width:170px;height:170px;border-radius:50%;
-  background:radial-gradient(circle,#ff6b9d2a,transparent 70%);
-  border:2px solid #ff6b9d3a;
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 18px;position:relative;
-  animation:breath 3s ease-in-out infinite;
-}
-.ring::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px dashed #ff6b9d28;animation:spin 14s linear infinite}
+.ring{width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,#ff6b9d2a,transparent 70%);border:2px solid #ff6b9d3a;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative;animation:breath 3s ease-in-out infinite}
+.ring::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px dashed #ff6b9d28;animation:spinn 14s linear infinite}
 @keyframes breath{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
-@keyframes spin{to{transform:rotate(360deg)}}
-.n21{font-family:'Dancing Script',cursive;font-size:88px;font-weight:700;color:#ff6b9d;line-height:1;text-shadow:0 0 40px #ff6b9d88}
+@keyframes spinn{to{transform:rotate(360deg)}}
+.n21{font-family:'Dancing Script',cursive;font-size:86px;font-weight:700;color:#ff6b9d;line-height:1;text-shadow:0 0 40px #ff6b9d88}
 
-/* CARDS */
-.card{
-  background:rgba(255,107,157,0.07);
-  border:1px solid rgba(255,107,157,0.22);
-  border-radius:22px;padding:20px 18px;
-  width:100%;max-width:360px;text-align:left;
-  position:relative;margin-bottom:12px;
-}
+.card{background:rgba(255,107,157,0.07);border:1px solid rgba(255,107,157,0.22);border-radius:22px;padding:20px 18px;width:100%;max-width:360px;text-align:left;position:relative;margin-bottom:12px}
 .card:last-child{margin-bottom:0}
 .ci{font-size:28px;margin-bottom:8px}
-.card h3{font-size:15px;font-weight:700;color:#ff6b9d;margin-bottom:6px}
 .card p{font-size:13.5px;line-height:1.8;color:#ffd6e8}
 .qq{position:absolute;top:-6px;left:12px;font-family:'Dancing Script',cursive;font-size:65px;color:#ff6b9d1a;line-height:1}
 
-/* MAPA */
 .cits{display:flex;align-items:center;width:100%;max-width:320px;margin:16px auto 16px}
 .cit{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto}
 .cblob{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
@@ -89,10 +103,11 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
 .plane{position:absolute;top:50%;left:0;transform:translateY(-50%);font-size:16px;animation:glide 3s ease-in-out infinite}
 @keyframes glide{0%{left:0}50%{left:calc(100% - 18px)}100%{left:0}}
 
-/* PLAYER */
+/* MÚSICA */
 .plcard{background:rgba(255,107,157,0.08);border:1px solid rgba(255,107,157,0.25);border-radius:20px;padding:18px 16px;width:100%;max-width:340px}
 .ptop{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.alb{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#ff6b9d,#c71470);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.alb{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#ff6b9d,#c71470);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;animation:albspin 4s linear infinite}
+@keyframes albspin{to{border-radius:12px 20px 12px 20px}}
 .tnm{font-size:13px;font-weight:700;color:#fff}
 .tat{font-size:11px;color:#ffaecb;margin-top:2px}
 .pb2{width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:2px;cursor:pointer;margin-bottom:4px}
@@ -102,10 +117,8 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
 .pp{background:linear-gradient(135deg,#ff6b9d,#c71470);border:none;color:#fff;width:46px;height:46px;border-radius:50%;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s}
 .pp:active{transform:scale(.92)}
 .sc{background:none;border:none;color:#ffaecb;font-size:16px;cursor:pointer;padding:8px}
-.ytn{font-size:11px;color:#ffaecb44;margin-top:10px;text-align:center}
-.ytn a{color:#ff6b9d;font-weight:700;text-decoration:none}
+.yt-big{display:block;margin-top:14px;background:linear-gradient(135deg,#ff0000,#cc0000);color:#fff;text-decoration:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;text-align:center}
 
-/* FINAL */
 .bh{font-size:62px;animation:ph 1.4s ease-in-out infinite;display:block;margin:10px 0}
 @keyframes ph{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
 .fwbtn{background:linear-gradient(135deg,#ff6b9d,#c71470);border:none;color:#fff;border-radius:50px;padding:13px 30px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px #ff6b9d55;transition:transform .1s;margin-top:14px}
@@ -117,15 +130,33 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
 <canvas id="bg"></canvas>
 <canvas id="fw"></canvas>
 
-<!-- PANTALLA 0: PORTADA -->
-<div id="s0" class="screen active">
+<!-- CUENTA REGRESIVA -->
+<div id="countdown-screen">
+  <div class="lock-icon">🔒</div>
+  <div class="cd-title">Algo especial te espera...</div>
+  <div class="cd-sub">Este regalo se desbloquea el<br><b style="color:#ff6b9d">19 de junio a las 12:00 AM 🌹</b></div>
+  <div class="cd-boxes">
+    <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Horas</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
+    <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Seg</div></div>
+  </div>
+  <div class="cd-msg">Aguanta un poquito más, chaparra.<br>Vale la pena la espera. 💖</div>
+</div>
+
+<!-- ANIMACIÓN DE DESBLOQUEO -->
+<div id="unlock-anim">
+  <div class="ul-emoji">🔓</div>
+  <p>¡Se desbloqueó tu regalo! 🎉</p>
+</div>
+
+<!-- PANTALLAS -->
+<div id="s0" class="screen">
   <div class="lbl">19 de junio · 2025</div>
   <div class="ring"><div class="n21">21</div></div>
   <div class="ds" style="font-size:28px;margin-bottom:8px">Feliz cumpleaños,<br><span class="pk">chaparra 🌹</span></div>
   <p style="font-size:13px;color:#ffaecb;line-height:1.8;max-width:270px;margin-top:10px">Para la niña más bonita de Veracruz.<br>Toca <b style="color:#ff6b9d">Siguiente</b> y descubre algo especial.</p>
 </div>
 
-<!-- PANTALLA 1: CARTA PARTE 1 -->
 <div id="s1" class="screen">
   <div class="lbl">Una carta para ti</div>
   <div class="ds pk" style="font-size:24px;margin-bottom:16px">Llegaste cuando<br>menos lo esperaba</div>
@@ -138,7 +169,6 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
   </div>
 </div>
 
-<!-- PANTALLA 2: RAZONES 1 -->
 <div id="s2" class="screen">
   <div class="lbl">Por qué te amo</div>
   <div class="ds pk" style="font-size:24px;margin-bottom:16px">Razones que me<br>sobran 💖</div>
@@ -152,7 +182,6 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
   </div>
 </div>
 
-<!-- PANTALLA 3: RAZONES 2 -->
 <div id="s3" class="screen">
   <div class="lbl">Por qué te amo</div>
   <div class="ds pk" style="font-size:24px;margin-bottom:16px">Y podría seguir<br>para siempre ✨</div>
@@ -166,7 +195,6 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
   </div>
 </div>
 
-<!-- PANTALLA 4: DISTANCIA -->
 <div id="s4" class="screen">
   <div class="lbl">A pesar de todo</div>
   <div class="ds pk" style="font-size:24px;margin-bottom:14px">La distancia no<br>puede con esto</div>
@@ -184,11 +212,10 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
     </div>
   </div>
   <div class="card" style="text-align:center">
-    <p>Sonríe cuando recibe un mensaje tuyo.<br>Sueña contigo cada noche.<br><br><b style="color:#ff6b9d">El amor no necesita estar cerca<br>para ser real.</b></p>
+    <p>Hay alguien en Colima que sonríe cuando recibe tu mensaje y sueña contigo cada noche.<br><br><b style="color:#ff6b9d">El amor no necesita estar cerca para ser real.</b></p>
   </div>
 </div>
 
-<!-- PANTALLA 5: MÚSICA -->
 <div id="s5" class="screen">
   <div class="lbl">🎵 Tu canción</div>
   <div class="ds pk" style="font-size:24px;margin-bottom:14px">Esta es para ti,<br>chaparra</div>
@@ -196,22 +223,21 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
     <div class="ptop">
       <div class="alb">🎶</div>
       <div>
-        <div class="tnm">Tu canción especial</div>
+        <div class="tnm" id="song-title">Cargando...</div>
         <div class="tat">Solo para ti · 19 jun 2025</div>
       </div>
     </div>
     <div class="pb2" onclick="seek(event,this)"><div class="pf" id="pf"></div></div>
-    <div class="trow"><span id="ct">0:00</span><span id="dt">3:00</span></div>
+    <div class="trow"><span id="ct">0:00</span><span id="dt">0:00</span></div>
     <div class="pctrls">
       <button class="sc" onclick="rst()">⏮</button>
-      <button class="pp" id="pbtn" onclick="tp()">▶</button>
+      <button class="pp" id="pbtn" onclick="tp()">⏸</button>
       <button class="sc" id="mb" onclick="tm()">🔊</button>
     </div>
-    <div class="ytn">🎵 Escucha en: <a href="https://www.youtube.com/watch?v=MldGX_mbS-o" target="_blank">YouTube ↗</a></div>
+    <a class="yt-big" href="https://www.youtube.com/watch?v=MldGX_mbS-o" target="_blank">▶ Abrir en YouTube</a>
   </div>
 </div>
 
-<!-- PANTALLA 6: FINAL -->
 <div id="s6" class="screen">
   <div class="lbl">Con todo mi amor</div>
   <div class="ds" style="font-size:26px;margin-bottom:6px">Gracias por existir,<br><span class="pk">mi chaparra 🌸</span></div>
@@ -222,23 +248,63 @@ canvas#fw{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-e
   <button class="fwbtn" onclick="launchFW()">🎆 ¡Lanzar fuegos artificiales!</button>
 </div>
 
-<!-- NAVEGACIÓN -->
-<div class="nav">
+<div class="nav" id="main-nav" style="display:none">
   <button class="nbtn" id="bprev" onclick="go(-1)">← Atrás</button>
   <div class="dots" id="dots"></div>
   <button class="nbtn main" id="bnext" onclick="go(1)">Siguiente →</button>
 </div>
 
 <script>
+// ============ FECHA OBJETIVO ============
+// 19 junio 2025 00:00:00 hora de México (CDT = UTC-5)
+const TARGET = new Date('2025-06-19T00:00:00-05:00');
+
+function checkTime(){
+  const now = new Date();
+  const diff = TARGET - now;
+  if(diff <= 0){
+    unlock();
+    return;
+  }
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+  setTimeout(checkTime, 1000);
+}
+
+function unlock(){
+  // Animación de desbloqueo
+  document.getElementById('countdown-screen').style.display = 'none';
+  const ua = document.getElementById('unlock-anim');
+  ua.style.display = 'flex';
+  launchFW();
+  setTimeout(()=>{
+    ua.style.display = 'none';
+    document.getElementById('main-nav').style.display = 'flex';
+    initScreens();
+    // Arranca música automático
+    startMusic();
+  }, 2500);
+}
+
+checkTime();
+
+// ============ PANTALLAS ============
 const TOTAL = 7;
 let cur = 0;
 
-// Dots
-const dotsEl = document.getElementById('dots');
-for(let i = 0; i < TOTAL; i++){
-  const d = document.createElement('div');
-  d.className = 'd' + (i===0?' on':'');
-  dotsEl.appendChild(d);
+function initScreens(){
+  const dotsEl = document.getElementById('dots');
+  for(let i = 0; i < TOTAL; i++){
+    const d = document.createElement('div');
+    d.className = 'd' + (i===0?' on':'');
+    dotsEl.appendChild(d);
+  }
+  document.getElementById('s0').className = 'screen active';
+  document.getElementById('bprev').className = 'nbtn hide';
 }
 
 function go(dir){
@@ -248,34 +314,25 @@ function go(dir){
   cur = nxt;
   for(let i = 0; i < TOTAL; i++){
     const el = document.getElementById('s'+i);
-    if(i === cur){ el.className = 'screen active'; }
-    else if(i < cur){ el.className = 'screen gone'; }
-    else { el.className = 'screen'; }
+    if(i === cur) el.className = 'screen active';
+    else if(i < cur) el.className = 'screen gone';
+    else el.className = 'screen';
   }
   document.querySelectorAll('.d').forEach((d,i) => d.className = 'd'+(i===cur?' on':''));
-  const prev = document.getElementById('bprev');
-  const next = document.getElementById('bnext');
-  prev.className = 'nbtn' + (cur===0?' hide':'');
-  if(cur === TOTAL-1){
-    next.className = 'nbtn main hide';
-  } else {
-    next.textContent = 'Siguiente →';
-    next.className = 'nbtn main';
-  }
+  document.getElementById('bprev').className = 'nbtn'+(cur===0?' hide':'');
+  document.getElementById('bnext').className = cur===TOTAL-1?'nbtn main hide':'nbtn main';
 }
 
-document.getElementById('bprev').className = 'nbtn hide';
-
-// Partículas de fondo
+// ============ PARTÍCULAS ============
 const bgC = document.getElementById('bg');
 const bgX = bgC.getContext('2d');
 let bW, bH, pts = [];
 function rsB(){ bW = bgC.width = window.innerWidth; bH = bgC.height = window.innerHeight; }
 rsB(); window.addEventListener('resize', rsB);
 for(let i = 0; i < 65; i++){
-  pts.push({ x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight,
-    r: Math.random()*1.8+.4, dx: (Math.random()-.5)*.25, dy: -Math.random()*.35-.1,
-    a: Math.random()*.5+.15, c: Math.random()>.5?'#ff6b9d':'#c7d2fe' });
+  pts.push({ x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight,
+    r:Math.random()*1.8+.4, dx:(Math.random()-.5)*.25, dy:-Math.random()*.35-.1,
+    a:Math.random()*.5+.15, c:Math.random()>.5?'#ff6b9d':'#c7d2fe' });
 }
 function aBg(){
   bgX.clearRect(0,0,bW,bH);
@@ -289,13 +346,12 @@ function aBg(){
 }
 aBg();
 
-// Fuegos artificiales
+// ============ FUEGOS ============
 const fwC = document.getElementById('fw');
 const fwX = fwC.getContext('2d');
 let fwP = [], fwOn = false;
 function rsF(){ fwC.width=window.innerWidth; fwC.height=window.innerHeight; }
 rsF(); window.addEventListener('resize', rsF);
-
 function burst(){
   const x=Math.random()*fwC.width, y=Math.random()*fwC.height*.5+60;
   const cols=['#ff6b9d','#ffd6e8','#c7d2fe','#fff','#ffaecb','#ff9de2','#ffc0cb'];
@@ -323,19 +379,71 @@ function aFw(){
   if(fwOn||fwP.length>0) requestAnimationFrame(aFw);
 }
 
-// Reproductor simulado
-let aCtx=null, playing=false, muted=false, elapsed=0, dur=180, itv=null;
+// ============ REPRODUCTOR ============
+let audioEl = null;
+let playing = false, muted = false, elapsed = 0, dur = 0, itv = null;
+
 function fmt(s){ s=Math.max(0,~~s); return ~~(s/60)+':'+(s%60<10?'0':'')+s%60; }
-function tp(){
-  if(!aCtx) aCtx=new(window.AudioContext||window.webkitAudioContext)();
-  playing=!playing;
-  document.getElementById('pbtn').textContent=playing?'⏸':'▶';
-  if(playing){ itv=setInterval(()=>{ elapsed=Math.min(elapsed+1,dur); document.getElementById('pf').style.width=(elapsed/dur*100)+'%'; document.getElementById('ct').textContent=fmt(elapsed); if(elapsed>=dur){clearInterval(itv);playing=false;document.getElementById('pbtn').textContent='▶';} },1000); }
-  else clearInterval(itv);
+
+function startMusic(){
+  // Crear elemento de audio con la canción de YouTube vía proxy
+  // Usamos un iframe oculto para autoplay de YouTube
+  const iframe = document.createElement('iframe');
+  iframe.style.cssText = 'width:0;height:0;position:fixed;opacity:0;pointer-events:none';
+  iframe.allow = 'autoplay';
+  iframe.src = 'https://www.youtube.com/embed/MldGX_mbS-o?autoplay=1&controls=0&loop=1&playlist=MldGX_mbS-o';
+  document.body.appendChild(iframe);
+  document.getElementById('song-title').textContent = 'Reproduciendo... 🎵';
+  document.getElementById('pbtn').textContent = '⏸';
+  playing = true;
+  // Simular barra de progreso
+  dur = 210;
+  document.getElementById('dt').textContent = fmt(dur);
+  itv = setInterval(()=>{
+    elapsed = Math.min(elapsed+1, dur);
+    document.getElementById('pf').style.width = (elapsed/dur*100)+'%';
+    document.getElementById('ct').textContent = fmt(elapsed);
+    if(elapsed>=dur){ clearInterval(itv); elapsed=0; }
+  }, 1000);
+  window._yt_iframe = iframe;
 }
-function rst(){ elapsed=0; clearInterval(itv); if(playing){playing=false;document.getElementById('pbtn').textContent='▶';} document.getElementById('pf').style.width='0%'; document.getElementById('ct').textContent='0:00'; }
-function tm(){ muted=!muted; document.getElementById('mb').textContent=muted?'🔇':'🔊'; }
-function seek(e,b){ const r=b.getBoundingClientRect(); elapsed=~~((e.clientX-r.left)/r.width*dur); document.getElementById('pf').style.width=(elapsed/dur*100)+'%'; document.getElementById('ct').textContent=fmt(elapsed); }
+
+function tp(){
+  if(!window._yt_iframe){ startMusic(); return; }
+  playing = !playing;
+  document.getElementById('pbtn').textContent = playing ? '⏸' : '▶';
+  if(playing){
+    window._yt_iframe.src = 'https://www.youtube.com/embed/MldGX_mbS-o?autoplay=1&controls=0&loop=1&playlist=MldGX_mbS-o&start='+elapsed;
+    itv = setInterval(()=>{ elapsed=Math.min(elapsed+1,dur); document.getElementById('pf').style.width=(elapsed/dur*100)+'%'; document.getElementById('ct').textContent=fmt(elapsed); if(elapsed>=dur){clearInterval(itv);elapsed=0;} },1000);
+  } else {
+    window._yt_iframe.src = '';
+    clearInterval(itv);
+  }
+}
+
+function rst(){
+  elapsed=0;
+  if(window._yt_iframe) window._yt_iframe.src='https://www.youtube.com/embed/MldGX_mbS-o?autoplay=1&controls=0&loop=1&playlist=MldGX_mbS-o';
+  document.getElementById('pf').style.width='0%';
+  document.getElementById('ct').textContent='0:00';
+  clearInterval(itv);
+  itv=setInterval(()=>{ elapsed=Math.min(elapsed+1,dur); document.getElementById('pf').style.width=(elapsed/dur*100)+'%'; document.getElementById('ct').textContent=fmt(elapsed); if(elapsed>=dur){clearInterval(itv);elapsed=0;} },1000);
+}
+
+function tm(){
+  muted=!muted;
+  document.getElementById('mb').textContent = muted?'🔇':'🔊';
+}
+
+function seek(e,b){
+  const r=b.getBoundingClientRect();
+  elapsed=~~((e.clientX-r.left)/r.width*dur);
+  document.getElementById('pf').style.width=(elapsed/dur*100)+'%';
+  document.getElementById('ct').textContent=fmt(elapsed);
+  if(window._yt_iframe && playing){
+    window._yt_iframe.src='https://www.youtube.com/embed/MldGX_mbS-o?autoplay=1&controls=0&loop=1&playlist=MldGX_mbS-o&start='+elapsed;
+  }
+}
 </script>
 </body>
 </html>
